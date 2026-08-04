@@ -22,34 +22,67 @@
         .result-key { font-family: monospace; font-size: 1.15rem; font-weight: 800; color: #10b981; letter-spacing: 1px; word-break: break-all; margin-bottom: 14px; background: #0f172a; padding: 12px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.3); }
         .btn-copy { width: 100%; padding: 12px; background: #10b981; border: none; border-radius: 10px; color: #ffffff; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
         .hint { font-size: 0.7rem; color: #64748b; margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px; }
+        .error-msg { color: #ef4444; font-size: 0.8rem; font-weight: 700; margin-top: 8px; display: none; }
     </style>
 </head>
 <body>
     <div class="card">
         <div class="badge">🌐 VERCEL OFFICIAL KEYGEN</div>
         <h1>GENERATOR KODE LISENSI</h1>
-        <p class="subtitle">Ketik / Tempel Machine ID Komputer Teman Anda Untuk Menghasilkan Kunci Aktivasi Resmi</p>
+        <p class="subtitle">Akses Khusus Admin (Terproteksi Password)</p>
 
-        <div class="field">
-            <label for="txtMachineId">Kode Perangkat Teman (Machine ID):</label>
-            <input type="text" id="txtMachineId" placeholder="Contoh: SCH-2C58-A0EF-8D2F" autocomplete="off" spellcheck="false">
+        <!-- Step 1: Admin Password Form -->
+        <div id="loginStep">
+            <div class="field">
+                <label for="txtAdminPassword">🔐 Password Admin:</label>
+                <input type="password" id="txtAdminPassword" placeholder="Masukkan Password Admin..." style="text-transform: none;">
+                <div class="error-msg" id="loginError">Password Admin Salah!</div>
+            </div>
+            <button class="btn-gen" onclick="verifyAdminPassword()">🔓 MASUK KE GENERATOR</button>
         </div>
 
-        <button class="btn-gen" onclick="handleGenerateKey()">✨ GENERATE KUNCI AKTIVASI</button>
+        <!-- Step 2: Key Generator Form (Hidden until logged in) -->
+        <div id="keygenStep" style="display: none;">
+            <div class="field">
+                <label for="txtMachineId">Kode Perangkat Teman (Machine ID):</label>
+                <input type="text" id="txtMachineId" placeholder="Contoh: SCH-2C58-A0EF-8D2F" autocomplete="off" spellcheck="false">
+            </div>
 
-        <div class="result-box" id="resultBox">
-            <div class="result-title">Kunci Aktivasi Resmi Teman Anda:</div>
-            <div class="result-key" id="resultKey">KEY-XXXX-XXXX-XXXX-XXXX</div>
-            <button class="btn-copy" onclick="copyKey()">📋 Salin Kunci Aktivasi</button>
+            <button class="btn-gen" onclick="handleGenerateKey()">✨ GENERATE KUNCI AKTIVASI</button>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title">Kunci Aktivasi Resmi Teman Anda:</div>
+                <div class="result-key" id="resultKey">KEY-XXXX-XXXX-XXXX-XXXX</div>
+                <button class="btn-copy" onclick="copyKey()">📋 Salin Kunci Aktivasi</button>
+            </div>
         </div>
 
         <div class="hint">
-            💡 Huruf 'O' dan Angka '0' otomatis dinormalisasi oleh sistem.
+            💡 Disertai Proteksi Admin & Normalisasi Otomatis Huruf 'O' dan Angka '0'.
         </div>
     </div>
 
     <script>
+        const ADMIN_PASSWORD = 'SDIT2026';
         const SECRET_SALT = 'SDIT_POWERPOINT_REMOTE_SECRET_SALT_2026';
+
+        // Check stored session
+        if (localStorage.getItem('keygen_admin_authed') === 'true') {
+            document.getElementById('loginStep').style.display = 'none';
+            document.getElementById('keygenStep').style.display = 'block';
+        }
+
+        function verifyAdminPassword() {
+            const pwd = document.getElementById('txtAdminPassword').value.trim();
+            if (pwd === ADMIN_PASSWORD) {
+                localStorage.setItem('keygen_admin_authed', 'true');
+                document.getElementById('loginStep').style.display = 'none';
+                document.getElementById('keygenStep').style.display = 'block';
+                document.getElementById('loginError').style.display = 'none';
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
 
         function normalizeKey(str) {
             if (!str) return '';
