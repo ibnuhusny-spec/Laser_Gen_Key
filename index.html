@@ -45,7 +45,7 @@
         <div id="keygenStep" style="display: none;">
             <div class="field">
                 <label for="txtMachineId">Kode Perangkat Teman (Machine ID):</label>
-                <input type="text" id="txtMachineId" placeholder="Contoh: SCH-2C58-A0EF-8D2F" autocomplete="off" spellcheck="false">
+                <input type="text" id="txtMachineId" placeholder="Contoh: SCH-A253-DA70-5E07" autocomplete="off" spellcheck="false">
             </div>
 
             <button class="btn-gen" onclick="handleGenerateKey()">✨ GENERATE KUNCI AKTIVASI</button>
@@ -58,7 +58,7 @@
         </div>
 
         <div class="hint">
-            💡 Disertai Proteksi Admin & Normalisasi Otomatis Huruf 'O' dan Angka '0'.
+            💡 Disertai Proteksi Hardware Stabil & Normalisasi Otomatis Huruf 'O', 'I', Strip & Spasi.
         </div>
     </div>
 
@@ -86,7 +86,15 @@
 
         function normalizeKey(str) {
             if (!str) return '';
-            return str.trim().toUpperCase().replace(/O/g, '0').replace(/I/g, '1');
+            return str.toString().trim().toUpperCase().replace(/[\s\-]/g, '').replace(/O/g, '0').replace(/I/g, '1');
+        }
+
+        function formatActivationKey(cleanStr) {
+            const s = cleanStr.replace(/^KEY/, '');
+            if (s.length >= 16) {
+                return `KEY-${s.substring(0, 4)}-${s.substring(4, 8)}-${s.substring(8, 12)}-${s.substring(12, 16)}`;
+            }
+            return `KEY-${s}`;
         }
 
         async function sha256(message) {
@@ -101,8 +109,8 @@
             const cleanMachineId = normalizeKey(machineId);
             const raw = cleanMachineId + '_' + SECRET_SALT;
             const hash = await sha256(raw);
-            const rawKey = `KEY-${hash.substring(0, 4)}-${hash.substring(4, 8)}-${hash.substring(8, 12)}-${hash.substring(12, 16)}`;
-            return normalizeKey(rawKey);
+            const rawKey = `KEY${hash.substring(0, 4)}${hash.substring(4, 8)}${hash.substring(8, 12)}${hash.substring(12, 16)}`;
+            return formatActivationKey(normalizeKey(rawKey));
         }
 
         async function handleGenerateKey() {
